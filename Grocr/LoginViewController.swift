@@ -33,7 +33,7 @@ class LoginViewController: UIViewController {
   @IBOutlet weak var textFieldLoginPassword: UITextField!
   
   // MARK: Properties
-  
+  let ref = Firebase(url: "https://containers.firebaseio.com")
   // MARK: UIViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -53,7 +53,19 @@ class LoginViewController: UIViewController {
       style: .Default) { (action: UIAlertAction) -> Void in
         
       let emailField = alert.textFields![0] 
-      let passwordField = alert.textFields![1] 
+      let passwordField = alert.textFields![1]
+        
+        // 1
+        self.ref.createUser(emailField.text, password: passwordField.text) { (error: NSError!) in
+            // 2
+            if error == nil {
+                // 3
+                self.ref.authUser(emailField.text, password: passwordField.text,
+                    withCompletionBlock: { (error, auth) -> Void in
+                        // 4
+                })
+            }
+        }
       
       
         
