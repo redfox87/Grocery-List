@@ -55,21 +55,12 @@ class GroceryListTableViewController: UITableViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        // 1
-        ref.observeEventType(.Value, withBlock: { snapshot in
-            
-            // 2
+        ref.queryOrderedByChild("completed").observeEventType(.Value, withBlock: { snapshot in
             var newItems = [GroceryItem]()
-            
-            // 3
             for item in snapshot.children {
-                
-                // 4
                 let groceryItem = GroceryItem(snapshot: item as! FDataSnapshot)
                 newItems.append(groceryItem)
             }
-            
-            // 5
             self.items = newItems
             self.tableView.reloadData()
         })
@@ -103,25 +94,28 @@ class GroceryListTableViewController: UITableViewController {
     return true
   }
   
-  override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-    if editingStyle == .Delete {
-      // Find the snapshot and remove the value
-      items.removeAtIndex(indexPath.row)
-      tableView.reloadData()
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete {
+            // 1
+            let groceryItem = items[indexPath.row]
+            // 2
+            groceryItem.ref?.removeValue()
+        }
     }
-  }
-  
-  override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    let cell = tableView.cellForRowAtIndexPath(indexPath)!
-    var groceryItem = items[indexPath.row]
-    let toggledCompletion = !groceryItem.completed
-    
-    // Determine whether the cell is checked
-    toggleCellCheckbox(cell, isCompleted: toggledCompletion)
-    groceryItem.completed = toggledCompletion
-    tableView.reloadData()
-  }
-  
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        // 1
+        let cell = tableView.cellForRowAtIndexPath(indexPath)!
+        // 2
+        var groceryItem = items[indexPath.row]
+        // 3
+        let toggledCompletion = !groceryItem.completed
+        // 4
+        toggleCellCheckbox(cell, isCompleted: toggledCompletion)
+        // 5
+        groceryItem.ref?.updateChildValues([
+            "completed": toggledCompletion
+            ])
+    }
   func toggleCellCheckbox(cell: UITableViewCell, isCompleted: Bool) {
     if !isCompleted {
       cell.accessoryType = UITableViewCellAccessoryType.None
