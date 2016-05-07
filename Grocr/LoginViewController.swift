@@ -37,12 +37,28 @@ class LoginViewController: UIViewController {
   // MARK: UIViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-  }
+    
+        
+        // 1
+        ref.observeAuthEventWithBlock { (authData) -> Void in
+            // 2
+            if authData != nil {
+                // 3
+                self.performSegueWithIdentifier(self.LoginToList, sender: nil)
+            }
+        }
+    }
+  
   
   // MARK: Actions
   @IBAction func loginDidTouch(sender: AnyObject) {
-    performSegueWithIdentifier(LoginToList, sender: nil)
+    ref.authUser(textFieldLoginEmail.text, password: textFieldLoginPassword.text,
+        withCompletionBlock: { (error, auth) in
+            
+    })
+
   }
+    
 
   @IBAction func signUpDidTouch(sender: AnyObject) {
     let alert = UIAlertController(title: "Register",

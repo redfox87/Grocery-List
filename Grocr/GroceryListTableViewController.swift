@@ -64,6 +64,11 @@ class GroceryListTableViewController: UITableViewController {
             self.items = newItems
             self.tableView.reloadData()
         })
+        ref.observeAuthEventWithBlock { authData in
+            if authData != nil {
+                self.user = User(authData: authData)
+            }
+        }
     }
   
   override func viewDidDisappear(animated: Bool) {
