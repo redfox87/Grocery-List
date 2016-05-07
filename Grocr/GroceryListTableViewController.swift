@@ -32,6 +32,8 @@ class GroceryListTableViewController: UITableViewController {
   var user: User!
   var userCountBarButtonItem: UIBarButtonItem!
   
+    let ref = Firebase(url: "https://containers.firebaseio.com/grocery-items")
+    
   // MARK: UIViewController Lifecycle
   
   override func viewDidLoad() {
@@ -49,9 +51,29 @@ class GroceryListTableViewController: UITableViewController {
     user = User(uid: "FakeId", email: "hungry@person.food")
   }
   
-  override func viewDidAppear(animated: Bool) {
-    super.viewDidAppear(animated)
-  }
+// * synchronize data table view
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // 1
+        ref.observeEventType(.Value, withBlock: { snapshot in
+            
+            // 2
+            var newItems = [GroceryItem]()
+            
+            // 3
+            for item in snapshot.children {
+                
+                // 4
+                let groceryItem = GroceryItem(snapshot: item as! FDataSnapshot)
+                newItems.append(groceryItem)
+            }
+            
+            // 5
+            self.items = newItems
+            self.tableView.reloadData()
+        })
+    }
   
   override func viewDidDisappear(animated: Bool) {
     super.viewDidDisappear(animated)
@@ -121,12 +143,19 @@ class GroceryListTableViewController: UITableViewController {
       preferredStyle: .Alert)
     
     let saveAction = UIAlertAction(title: "Save",
-      style: .Default) { (action: UIAlertAction) -> Void in
-    
-      let textField = alert.textFields![0] 
-      let groceryItem = GroceryItem(name: textField.text!, addedByUser: self.user.email, completed: false)
-      self.items.append(groceryItem)
-      self.tableView.reloadData()
+        style: .Default) { (action: UIAlertAction!) -> Void in
+            
+            // 1
+            let textField = alert.textFields![0] as UITextField!
+            
+            // 2
+            let groceryItem = GroceryItem(name: textField.text!, addedByUser: self.user.email, completed: false)
+            
+            // 3
+            let groceryItemRef = self.ref.childByAppendingPath(textField.text!.lowercaseString)
+            
+            // 4
+            groceryItemRef.setValue(groceryItem.toAnyObject())
     }
     
     let cancelAction = UIAlertAction(title: "Cancel",
