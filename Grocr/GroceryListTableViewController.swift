@@ -137,11 +137,11 @@ class GroceryListTableViewController: UITableViewController {
   
   @IBAction func addButtonDidTouch(sender: AnyObject) {
     // Alert View for input
-    var alert = UIAlertController(title: "Grocery Item",
+    var alert = UIAlertController(title: "Container",
       message: "Add an Item",
       preferredStyle: .Alert)
     
-    let saveAction = UIAlertAction(title: "Save",
+    let saveAction = UIAlertAction(title: "Add",
         style: .Default) { (action: UIAlertAction!) -> Void in
             
             // 1

@@ -33,7 +33,7 @@ class OnlineUsersTableViewController: UITableViewController {
   // MARK: UIViewController Lifecycle
   override func viewDidLoad() {
     super.viewDidLoad()
-    currentUsers.append("hungry@person.food")
+    currentUsers.append("item@container.storage")
   }
 
   // MARK: UITableView Delegate methods
