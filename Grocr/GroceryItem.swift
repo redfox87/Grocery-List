@@ -22,7 +22,7 @@
 
 import Foundation
 
-struct GroceryItem {
+struct InventoryItem {
   
   let key: String!
   let name: String!

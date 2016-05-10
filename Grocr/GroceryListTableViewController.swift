@@ -28,11 +28,11 @@ class GroceryListTableViewController: UITableViewController {
   let ListToUsers = "ListToUsers"
   
   // MARK: Properties 
-  var items = [GroceryItem]()
+  var items = [InventoryItem]()
   var user: User!
   var userCountBarButtonItem: UIBarButtonItem!
   
-    let ref = Firebase(url: "https://containers.firebaseio.com/grocery-items")
+    let ref = Firebase(url: "https://containers.firebaseio.com/inventory-items")
     
   // MARK: UIViewController Lifecycle
   
@@ -56,10 +56,10 @@ class GroceryListTableViewController: UITableViewController {
         super.viewDidAppear(animated)
         
         ref.queryOrderedByChild("completed").observeEventType(.Value, withBlock: { snapshot in
-            var newItems = [GroceryItem]()
+            var newItems = [InventoryItem]()
             for item in snapshot.children {
-                let groceryItem = GroceryItem(snapshot: item as! FDataSnapshot)
-                newItems.append(groceryItem)
+                let inventoryItem = InventoryItem(snapshot: item as! FDataSnapshot)
+                newItems.append(inventoryItem)
             }
             self.items = newItems
             self.tableView.reloadData()
@@ -84,13 +84,13 @@ class GroceryListTableViewController: UITableViewController {
   
   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCellWithIdentifier("ItemCell") as UITableViewCell!
-    let groceryItem = items[indexPath.row]
+    let inventoryItem = items[indexPath.row]
     
-    cell.textLabel?.text = groceryItem.name
-    cell.detailTextLabel?.text = groceryItem.addedByUser
+    cell.textLabel?.text = inventoryItem.name
+    cell.detailTextLabel?.text = inventoryItem.addedByUser
     
     // Determine whether the cell is checked
-    toggleCellCheckbox(cell, isCompleted: groceryItem.completed)
+    toggleCellCheckbox(cell, isCompleted: inventoryItem.completed)
     
     return cell
   }
@@ -102,22 +102,22 @@ class GroceryListTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             // 1
-            let groceryItem = items[indexPath.row]
+            let inventoryItem = items[indexPath.row]
             // 2
-            groceryItem.ref?.removeValue()
+            inventoryItem.ref?.removeValue()
         }
     }
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         // 1
         let cell = tableView.cellForRowAtIndexPath(indexPath)!
         // 2
-        var groceryItem = items[indexPath.row]
+        var inventoryItem = items[indexPath.row]
         // 3
-        let toggledCompletion = !groceryItem.completed
+        let toggledCompletion = !inventoryItem.completed
         // 4
         toggleCellCheckbox(cell, isCompleted: toggledCompletion)
         // 5
-        groceryItem.ref?.updateChildValues([
+        inventoryItem.ref?.updateChildValues([
             "completed": toggledCompletion
             ])
     }
@@ -148,13 +148,13 @@ class GroceryListTableViewController: UITableViewController {
             let textField = alert.textFields![0] as UITextField!
             
             // 2
-            let groceryItem = GroceryItem(name: textField.text!, addedByUser: self.user.email, completed: false)
+            let inventoryItem = InventoryItem(name: textField.text!, addedByUser: self.user.email, completed: false)
             
             // 3
-            let groceryItemRef = self.ref.childByAppendingPath(textField.text!.lowercaseString)
+            let inventoryItemRef = self.ref.childByAppendingPath(textField.text!.lowercaseString)
             
             // 4
-            groceryItemRef.setValue(groceryItem.toAnyObject())
+            inventoryItemRef.setValue(inventoryItem.toAnyObject())
     }
     
     let cancelAction = UIAlertAction(title: "Cancel",
