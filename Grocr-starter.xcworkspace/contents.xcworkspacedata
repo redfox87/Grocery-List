@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:/Users/solidstone/Desktop/Grocery-List/Containers.xcodeproj">
+      location = "group:/Users/solidstone/Desktop/Grocery-List/Grocr-starter.xcworkspace">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
