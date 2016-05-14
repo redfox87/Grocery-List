@@ -2,7 +2,11 @@
 <Workspace
    version = "1.0">
    <FileRef
+<<<<<<< HEAD
       location = "group:/Users/solidstone/Desktop/Grocery-List/Grocr-starter.xcworkspace">
+=======
+      location = "group:Grocr.xcodeproj">
+>>>>>>> parent of 24b4e6b... re-class more complete.
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

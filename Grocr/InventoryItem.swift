@@ -1,6 +1,6 @@
 //
 //  InventoryItem.swift
-//  
+//  Grocr
 //
 //  Created by solidstone on 5/10/16.
 //  Copyright © 2016 Razeware LLC. All rights reserved.
